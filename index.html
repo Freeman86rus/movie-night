@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#14131a">
+<title>Вечер кино</title>
+<style>
+:root{--bg:#14131a;--card:#1e1d27;--tx:#f3f1f7;--mut:#9a97a8;--blue:#4c8dff;--pink:#ff6fae}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+body{padding:env(safe-area-inset-top) 0 calc(96px + env(safe-area-inset-bottom))}
+header{display:flex;align-items:center;justify-content:space-between;padding:18px 18px 8px}
+h1{margin:0;font:800 26px/1 Georgia,serif;letter-spacing:-.5px}
+.ic{background:none;border:0;color:var(--mut);font-size:22px;padding:6px}
+.tabs{display:flex;gap:8px;padding:6px 18px 14px}
+.tab{border:1px solid #34323f;background:none;color:var(--mut);border-radius:20px;padding:7px 14px;font:inherit;font-size:14px}
+.tab.on{background:var(--tx);color:var(--bg);border-color:var(--tx)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;padding:0 18px}
+@media(min-width:600px){.grid{grid-template-columns:repeat(4,1fr)}}
+.m{position:relative;border-radius:14px;overflow:hidden;background:var(--card);border:3px solid var(--c);cursor:pointer}
+.m.a{--c:var(--blue)}.m.b{--c:var(--pink)}
+.m img,.ph{display:block;width:100%;aspect-ratio:2/3;object-fit:cover;background:#2a2935}
+.ph{display:flex;align-items:center;justify-content:center;padding:10px;text-align:center;color:var(--mut)}
+.m .t{background:var(--c);color:#0d0c12;font-weight:700;font-size:14px;padding:7px 9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.m.w img{opacity:.4}.m.w .t:after{content:" ✓"}
+.empty{padding:60px 30px;text-align:center;color:var(--mut)}
+.fab{position:fixed;left:18px;right:18px;bottom:calc(16px + env(safe-area-inset-bottom));background:var(--tx);color:var(--bg);border:0;border-radius:16px;padding:16px;font:700 17px inherit;box-shadow:0 8px 30px #0008}
+.sheet{position:fixed;inset:0;background:var(--bg);overflow-y:auto;padding:env(safe-area-inset-top) 0 40px;z-index:5;display:none}
+.sheet.open{display:block}
+.bar{display:flex;gap:10px;align-items:center;padding:14px 18px}
+input{width:100%;background:var(--card);border:1px solid #34323f;color:var(--tx);border-radius:12px;padding:13px;font:inherit}
+label{display:block;margin:16px 18px 6px;color:var(--mut);font-size:14px}
+.pad{padding:0 18px}
+.res{display:flex;gap:12px;padding:10px 18px;align-items:center;cursor:pointer}
+.res img,.res .ph{width:56px;aspect-ratio:2/3;border-radius:8px;flex:none;font-size:10px;padding:2px}
+.res small{color:var(--mut)}
+.hero{width:100%;max-height:320px;object-fit:cover;display:block}
+.who{display:inline-block;border-radius:10px;padding:2px 10px;font-size:13px;font-weight:700;color:#0d0c12;background:var(--c)}
+.who.a{--c:var(--blue)}.who.b{--c:var(--pink)}
+.btn{border:1px solid #34323f;background:var(--card);color:var(--tx);border-radius:12px;padding:12px 16px;font:inherit;margin:4px 6px 4px 0}
+.btn.p{background:var(--tx);color:var(--bg);font-weight:700}
+.rev{background:var(--card);border-radius:12px;padding:12px;margin:10px 0;font-size:14px}
+.rev b{display:block;margin-bottom:4px}
+iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:12px;margin-top:6px}
+h2{font-size:18px;margin:22px 0 6px}
+.mut{color:var(--mut);font-size:14px}
+.pick{display:flex;gap:10px}.pick button{flex:1}
+.pick .sel{outline:3px solid var(--tx)}
+
+body{background:radial-gradient(520px 420px at 0% 0%,#4c8dff33,transparent 70%),radial-gradient(520px 420px at 100% 0%,#ff6fae33,transparent 70%),var(--bg);background-attachment:fixed}
+h1.logo{font:italic 800 34px/1 Georgia,serif;letter-spacing:-1px;background:linear-gradient(90deg,var(--blue),var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hb{display:flex;gap:2px}.hb .ic{font-size:24px}
+.m{border:0;border-radius:20px;box-shadow:0 14px 28px -10px var(--c);transition:transform .15s}
+.m:nth-child(odd){transform:rotate(-1.3deg)}.m:nth-child(even){transform:rotate(1.3deg)}
+.m:active{transform:scale(.96)}
+.m.a::before{content:"💙"}.m.b::before{content:"💗"}
+.m::before{position:absolute;top:8px;left:8px;z-index:2;background:#000a;border-radius:12px;padding:2px 7px;font-size:15px}
+.m .t{position:absolute;left:0;right:0;bottom:0;white-space:normal;background:linear-gradient(transparent,#000d 70%);color:#fff;padding:30px 11px 10px;font-size:15px;line-height:1.15}
+.m.w .t:after{content:" ✓";color:#7dffb0}
+.fab{background:linear-gradient(90deg,var(--blue),var(--pink));color:#fff;font-size:18px;border-radius:20px;box-shadow:0 10px 34px -6px #ff6fae88}
+.splash{position:fixed;inset:0;z-index:20;display:flex;flex-direction:column;background:var(--bg)}
+.half{flex:1;border:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:#0d0c12;font:inherit;transition:flex .5s,opacity .5s}
+.half b{font:italic 800 34px/1 Georgia,serif}.half span{font-size:15px;opacity:.75}.half i{font-size:56px;font-style:normal}
+.half.a{background:var(--blue);padding-top:env(safe-area-inset-top);animation:inL .7s cubic-bezier(.2,.9,.3,1) both}
+.half.b{background:var(--pink);padding-bottom:env(safe-area-inset-bottom);animation:inR .7s .1s cubic-bezier(.2,.9,.3,1) both}
+@keyframes inL{from{transform:translateX(-100%)}}@keyframes inR{from{transform:translateX(100%)}}
+.badge{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:var(--bg);color:var(--tx);border-radius:50%;width:132px;height:132px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font:italic 800 21px/1.05 Georgia,serif;box-shadow:0 0 0 6px var(--bg);animation:pop .6s .7s both;pointer-events:none}
+.badge small{font:14px system-ui;color:var(--mut);margin-top:4px}
+@keyframes pop{from{transform:translate(-50%,-50%) scale(0)}}
+.splash.go .half{flex:0;opacity:0}.splash.go .half.chosen{flex:1;opacity:1}.splash.go .badge{opacity:0}
+.splash.gone{display:none}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<header><h1 class="logo">Что смотрим?</h1><div class="hb"><button class="ic" onclick="rnd()" title="Выбрать за нас">🎲</button><button class="ic" onclick="openSettings()">⚙</button></div></header>
+<div class="tabs" id="tabs"></div>
+<div class="grid" id="grid"></div>
+<button class="fab" onclick="openAdd()">+ Добавить фильм</button>
+
+<div class="sheet" id="add">
+  <div class="bar"><button class="ic" onclick="closeSheet('add')">←</button><input id="q" placeholder="Название фильма" oninput="debSearch()"></div>
+  <div id="results"></div>
+</div>
+
+<div class="sheet" id="detail"></div>
+
+<div class="sheet" id="settings">
+  <div class="bar"><button class="ic" onclick="closeSheet('settings')">←</button><b>Настройки</b></div>
+  <label>Кто ты на этом телефоне?</label>
+  <div class="pad pick">
+    <button class="btn" id="pa" onclick="setMe('a')" style="background:var(--blue);color:#0d0c12">Синий</button>
+    <button class="btn" id="pb" onclick="setMe('b')" style="background:var(--pink);color:#0d0c12">Розовый</button>
+  </div>
+  <label>Ключ TMDB (бесплатно на themoviedb.org → Settings → API)</label>
+  <div class="pad"><input id="key" placeholder="API Key (v3)"></div>
+  <label>Ссылка Firebase для общего списка (необязательно)</label>
+  <div class="pad"><input id="fb" placeholder="https://имя-default-rtdb.firebaseio.com"></div>
+  <label>Секретный код пары (одинаковый на обоих телефонах)</label>
+  <div class="pad"><input id="room" placeholder="например: lunnyj-kot-2026-xk7q"></div>
+  <p class="pad mut">Без Firebase список хранится только на этом телефоне. Чтобы вы оба видели один список, вставьте одну и ту же ссылку на обоих телефонах.</p>
+  <div class="pad"><button class="btn p" onclick="saveSettings()">Сохранить</button></div>
+</div>
+
+<div class="splash gone" id="splash">
+  <button class="half a" onclick="pickMe('a',this)"><i>💙</i><b>Я — синий</b><span>мои фильмы будут синими</span></button>
+  <button class="half b" onclick="pickMe('b',this)"><i>💗</i><b>Я — розовая</b><span>мои фильмы будут розовыми</span></button>
+  <div class="badge">Вечер<br>кино 🍿<small>кто ты?</small></div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const S=k=>{try{return localStorage.getItem(k)||""}catch(e){return ""}};
+const W=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
+let movies={}, me=S("me")||"", filter="all";
+try{movies=JSON.parse(S("movies")||"{}")}catch(e){}
+const key=()=>S("tmdb"), fb=()=>S("fb").replace(/\/+$/,""), room=()=>encodeURIComponent(S("room").trim()), db=()=>`${fb()}/rooms/${room()}/movies`;
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const img=(p,w="w342")=>p?`https://image.tmdb.org/t/p/${w}${p}`:"";
+const api=async(path,params={})=>{
+  const u=new URL("https://api.themoviedb.org/3"+path);
+  u.searchParams.set("api_key",key());
+  Object.entries(params).forEach(([k,v])=>u.searchParams.set(k,v));
+  const r=await fetch(u); if(!r.ok) throw new Error(r.status); return r.json();
+};
+
+/* ---------- list ---------- */
+function render(){
+  const tabs=[["all","Все"],["a","Синие"],["b","Розовые"],["w","Просмотрено"]];
+  $("tabs").innerHTML=tabs.map(([k,n])=>`<button class="tab ${filter==k?"on":""}" onclick="filter='${k}';render()">${n}</button>`).join("");
+  let list=Object.values(movies).sort((x,y)=>y.added-x.added);
+  list=list.filter(m=>filter=="w"?m.watched:filter=="all"?!m.watched:(m.by==filter&&!m.watched));
+  $("grid").innerHTML=list.map(m=>`<div class="m ${m.by} ${m.watched?"w":""}" onclick="openDetail('${m.id}')">
+    ${m.poster?`<img loading="lazy" src="${img(m.poster)}" alt="">`:`<div class="ph">${esc(m.title)}</div>`}
+    <div class="t">${esc(m.title)}</div></div>`).join("")
+    ||`<div class="empty" style="grid-column:1/-1">Тут пока пусто.<br>Нажми «Добавить фильм».</div>`;
+}
+
+/* ---------- sync ---------- */
+function persist(){W("movies",JSON.stringify(movies))}
+async function push(m){ if(!fb()||!room())return; try{await fetch(`${db()}/${m.id}.json`,{method:"PUT",body:JSON.stringify(m)})}catch(e){} }
+async function remove(id){ if(!fb()||!room())return; try{await fetch(`${db()}/${id}.json`,{method:"DELETE"})}catch(e){} }
+async function pull(){
+  if(!fb()||!room())return;
+  try{const r=await fetch(`${db()}.json`); const d=await r.json();
+    movies=d||{}; persist(); if(!$("detail").classList.contains("open")&&!$("add").classList.contains("open")) render();}catch(e){}
+}
+setInterval(pull,8000);
+
+/* ---------- add ---------- */
+let t;
+function debSearch(){clearTimeout(t);t=setTimeout(doSearch,350)}
+function openAdd(){
+  if(!me){$("splash").classList.remove("gone","go");return}
+  if(!key()){alert("Сначала вставь ключ TMDB. Без него поиск фильмов не работает.");openSettings();return}
+  $("add").classList.add("open");$("q").value="";$("results").innerHTML="";$("q").focus();
+}
+async function doSearch(){
+  const q=$("q").value.trim(); if(q.length<2){$("results").innerHTML="";return}
+  try{
+    let d=await api("/search/movie",{query:q,language:"ru-RU"});
+    $("results").innerHTML=d.results.slice(0,12).map(r=>`<div class="res" onclick="addMovie(${r.id},'${esc(r.title).replace(/'/g,"&#39;")}','${r.poster_path||""}')">
+      ${r.poster_path?`<img src="${img(r.poster_path,"w154")}" alt="">`:`<div class="ph">нет</div>`}
+      <div><b>${esc(r.title)}</b><br><small>${(r.release_date||"").slice(0,4)} ${r.original_title!==r.title?"· "+esc(r.original_title):""}</small></div></div>`).join("")
+      ||`<div class="empty">Ничего не найдено. Попробуй другое название.</div>`;
+  }catch(e){$("results").innerHTML=`<div class="empty">Не получилось найти. Проверь ключ TMDB в настройках.</div>`}
+}
+function addMovie(id,title,poster){
+  const m={id:String(id),title:title.replace(/&#39;/g,"'"),poster,by:me,watched:false,added:Date.now()};
+  movies[m.id]=m;persist();push(m);closeSheet("add");render();
+}
+
+/* ---------- detail ---------- */
+async function openDetail(id){
+  const m=movies[id]; const el=$("detail"); el.classList.add("open");
+  el.innerHTML=`<div class="bar"><button class="ic" onclick="closeSheet('detail')">←</button><span class="who ${m.by}">${m.by=="a"?"Синий":"Розовый"} предложил</span></div><div class="pad mut">Загружаю…</div>`;
+  try{
+    const [d,v,v2,rv,rv2]=await Promise.all([
+      api("/movie/"+id,{language:"ru-RU"}),
+      api("/movie/"+id+"/videos",{language:"ru-RU"}).catch(()=>({results:[]})),
+      api("/movie/"+id+"/videos",{language:"en-US"}).catch(()=>({results:[]})),
+      api("/movie/"+id+"/reviews",{language:"ru-RU"}).catch(()=>({results:[]})),
+      api("/movie/"+id+"/reviews",{language:"en-US"}).catch(()=>({results:[]}))
+    ]);
+    const vids=[...v.results,...v2.results].filter(x=>x.site=="YouTube");
+    const tr=vids.find(x=>x.type=="Trailer")||vids[0];
+    const revs=[...rv.results,...rv2.results].slice(0,4);
+    el.innerHTML=`
+    <div class="bar"><button class="ic" onclick="closeSheet('detail')">←</button><span class="who ${m.by}">${m.by=="a"?"Синий":"Розовый"} предложил</span></div>
+    ${d.backdrop_path?`<img class="hero" src="${img(d.backdrop_path,"w780")}" alt="">`:""}
+    <div class="pad">
+      <h1 style="margin-top:14px;font-size:28px">${esc(d.title)}</h1>
+      <div class="mut">${(d.release_date||"").slice(0,4)} · ${d.runtime||"?"} мин · ★ ${d.vote_average?d.vote_average.toFixed(1):"–"} · ${(d.genres||[]).map(g=>esc(g.name)).join(", ")}</div>
+      ${d.tagline?`<p><i>${esc(d.tagline)}</i></p>`:""}
+      <h2>О чём фильм</h2><p>${esc(d.overview)||"Описания на русском пока нет."}</p>
+      ${tr?`<h2>Трейлер</h2><iframe src="https://www.youtube-nocookie.com/embed/${tr.key}" allowfullscreen></iframe>`:""}
+      <h2>Отзывы</h2>
+      ${revs.map(r=>`<div class="rev"><b>${esc(r.author)}${r.author_details&&r.author_details.rating?" · "+r.author_details.rating+"/10":""}</b>${esc(r.content.slice(0,420))}${r.content.length>420?"…":""}</div>`).join("")||`<p class="mut">Отзывов пока нет.</p>`}
+      <div style="margin-top:22px">
+        <button class="btn p" onclick="toggleW('${id}')">${m.watched?"Вернуть в список":"Посмотрели ✓"}</button>
+        <button class="btn" onclick="del('${id}')">Удалить</button>
+      </div>
+    </div>`;
+  }catch(e){
+    el.innerHTML+=`<div class="pad"><p>Не удалось загрузить данные фильма. Проверь интернет и ключ TMDB.</p><button class="btn" onclick="del('${id}')">Удалить</button></div>`;
+  }
+}
+function toggleW(id){const m=movies[id];m.watched=!m.watched;persist();push(m);closeSheet("detail");render()}
+function del(id){if(!confirm("Удалить фильм из списка?"))return;delete movies[id];persist();remove(id);closeSheet("detail");render()}
+
+/* ---------- settings ---------- */
+function openSettings(){
+  $("key").value=S("tmdb");$("fb").value=S("fb");$("room").value=S("room");markMe();$("settings").classList.add("open");
+}
+function markMe(){["a","b"].forEach(k=>$("p"+k).classList.toggle("sel",me==k))}
+function setMe(k){me=k;markMe()}
+function saveSettings(){
+  W("me",me);W("tmdb",$("key").value.trim());W("fb",$("fb").value.trim());W("room",$("room").value.trim());
+  closeSheet("settings");pull();render();
+}
+function closeSheet(id){$(id).classList.remove("open")}
+
+function pickMe(k,el){
+  me=k;W("me",k);el.classList.add("chosen");$("splash").classList.add("go");
+  setTimeout(()=>{$("splash").classList.add("gone");if(!key())openSettings()},550);
+}
+function rnd(){
+  const l=Object.values(movies).filter(m=>!m.watched);
+  if(!l.length){alert("В списке пока нет фильмов. Добавьте первый!");return}
+  const m=l[Math.floor(Math.random()*l.length)];openDetail(m.id);
+}
+render();pull();
+if(!me)$("splash").classList.remove("gone");else if(!key())openSettings();
+</script>
+</body>
+</html>
